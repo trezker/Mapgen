@@ -1,0 +1,3 @@
+Fix 512 size 3d bug.
+Wrapping map in 3d, so it just goes on and on.
+Palette editor.

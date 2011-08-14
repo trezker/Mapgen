@@ -1,0 +1,37 @@
+v1.1
+23 Mar 2004
+Added KEY_ESC for exiting 3d view.
+Added options about flattening in 3d.
+	Taking values for both min and max heights. (Valley / sealevel and plateus)
+	Activated by checkboxes.
+
+v1.0
+13 Jan 2004
+Since both commands for map creation share all but the seeding code I've made them use the same code for creating the map so I don't have to change in two places every time.
+
+I've also made sure the map bitmap is resized for each map so you get a bmp the right size when you save.
+
+* Discovered a bug, can't edit the filename in the file select box, only backspace and delete works...
+
+
+
+New Year 2004
+Hello, Anders Andersson here (aka Trezker)
+
+I have messed a bit with this program so here's some additional notes.
+
+My first change is that I've changed the code so the createmap and show functions stand by themselves and take parameters instead which makes for easier use in whatever project you need it in.
+(They have also been renamed.)
+
+Then I added support for different mapsizes, for this I had to ask Johan for information. It currently only supports 2^x square maps, and I've added a slider where you can select 64,128,256 or 512.
+You could ofcourse scale the map into other shapes if you like.
+
+I have also moved the gui to the top left and put the map to the right to accomodate the different sizes better.
+And since I couldn't figure out the progress indicator, I wrote a new one that's simpler, to make it correct for all sizes.
+
+The last thing, for now, is that I've added the option to render with or whithout shadows through a flags variable to the drawing function.
+This means you can render random maps much faster, then you can turn shadows on when you find a map you like.
+
+OH, there's one more thing, you can also abort a map rendering by clicking.
+I had to add this since the 512 mapsize with shadows takes a really long time to render.
+And as I write this I added a blit inside the drawing function that shows every strip as it's completed, so you can see the map grow.
