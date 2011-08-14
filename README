@@ -1,0 +1,11 @@
+Note: 
+The docs folder is old, this whole project hasn't been touched in years until it went up on github.
+But read it anyway, it has relevant information.
+
+=== Building ===
+There's now a premake4 build script.
+This builds using Allegro 4.4.
+
+=== 3D view ===
+Uses Allegros old software 3D routines. It doesn't matter how good your gfx hardware is.
+But it runs nicely anyway on a modern computer.
