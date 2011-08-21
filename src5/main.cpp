@@ -2,11 +2,13 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_opengl.h>
+#include <allegro5/allegro_primitives.h>
 #include "map.h"
 #include <iostream>
 #include <cmath>
 #include "mtrand.h"
 #include "diamond_square.h"
+#include "coloursystem.h"
 
 #include "view3d.h"
 
@@ -19,11 +21,21 @@ int main() {
 	Diamond_square diamond_square;
 	diamond_square.Generate(map, 1337, 1.6);
 
+	Coloursystem coloursystem;
+	Colourpoint colourpoint;
+	colourpoint.Set_position(0);
+	colourpoint.Set_colour_f(1, 0, 0);
+	coloursystem.Add_colourpoint(colourpoint);
+	colourpoint.Set_position(1);
+	colourpoint.Set_colour_f(0, 1, 0);
+	coloursystem.Add_colourpoint(colourpoint);
+
 	al_init();
 	al_install_mouse();
 	al_install_keyboard();
 	al_init_font_addon();
 	al_init_ttf_addon();
+	al_init_primitives_addon();
 
 	ALLEGRO_DISPLAY *display;
 	al_set_new_display_flags(ALLEGRO_WINDOWED | ALLEGRO_OPENGL);
@@ -83,6 +95,14 @@ int main() {
 
 		al_clear_to_color(al_map_rgb(0, 0, 0));
 		view3d.Render();
+		
+		for(int x = 0; x<800; ++x) {
+			Colourpoint c = coloursystem.Interpolate(x/800.f);
+			ALLEGRO_COLOR color;
+			color = al_map_rgb_f(c.Get_r(), c.Get_g(), c.Get_b());
+			al_draw_line(x, 0, x, 10, color, 0);
+		}
+		
 		al_flip_display();
 
 		al_rest(0.001);

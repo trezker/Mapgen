@@ -20,7 +20,7 @@ solution (name)
 		files { "src5/*.cpp" }
 		targetdir "build"
 		includedirs { "include", "src5" }
-		links { "allegro", "allegro_font", "allegro_ttf", "alledge" }
+		links { "allegro", "allegro_font", "allegro_ttf", "allegro_primitives", "alledge" }
 --		libdirs { "/usr/local/lib" }
 		configuration "Debug"
 			defines { "DEBUG" }

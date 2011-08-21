@@ -1,4 +1,5 @@
 #include "coloursystem.h"
+#include <iostream>
 
 Colourpoint::Colourpoint()
 :p(0)
@@ -54,7 +55,7 @@ Colourpoint Colourpoint::Interpolate(const Colourpoint& c, float pin) const
 	float nb = (c.b - b)/(c.p-p)*(pin-p) + b;
 //	return int((c2 - c1)/(p2 - p1)*(pin - p1) + c1);
 	Colourpoint n;
-	n.Set_colour(nr, ng, nb);
+	n.Set_colour_f(nr, ng, nb);
 	n.Set_position(pin);
 	return n;
 }
@@ -83,7 +84,7 @@ Colourpoint& Coloursystem::Get_colourpoint(float pin)
 				return *j;
 			}
 		}
-		++j;
+		j = i;
 	}
 	return colourpoints.back();
 }
@@ -100,7 +101,7 @@ const Colourpoint& Coloursystem::Get_colourpoint(float pin) const
 				return *j;
 			}
 		}
-		++j;
+		j = i;
 	}
 	return colourpoints.back();
 }
@@ -119,7 +120,7 @@ void Coloursystem::Remove_colourpoint(float pin)
 				return;
 			}
 		}
-		++j;
+		j = i;
 	}
 	colourpoints.pop_back();
 }
@@ -128,10 +129,13 @@ Colourpoint Coloursystem::Interpolate(float pin) const
 {
 	Colourpoints::const_iterator j = colourpoints.begin();
 	for(Colourpoints::const_iterator i=colourpoints.begin(); i!= colourpoints.end(); ++i) {
-		if(i->Get_p() > pin) {
-			return i->Interpolate(*j, pin);
+		if(i->Get_p() >= pin) {
+			if(i==j) {
+				return *i;
+			}
+			return j->Interpolate(*i, pin);
 		}
-		++j;
+		j = i;
 	}
 	Colourpoint n = colourpoints.back();
 	return n;
