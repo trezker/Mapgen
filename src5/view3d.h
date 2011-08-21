@@ -17,6 +17,7 @@ public:
 	bool Init();
 	
 	void Build_map(const Map& map);
+	shared_ptr<Bitmap> Get_texture();
 	
 	void Update(float dt);
 	void Render();

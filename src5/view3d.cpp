@@ -3,6 +3,10 @@
 #include <allegro5/allegro_opengl.h>
 #include <iostream>
 
+shared_ptr<Bitmap> View3D::Get_texture()
+{
+	return texture;
+}
 
 bool View3D::Init()
 {
@@ -24,7 +28,7 @@ bool View3D::Init()
 	mouse_y = 0;
 
 	camera = new Cameranode();
-	camera->Set_position(Vector3(-20, 30, -20));
+	camera->Set_position(Vector3(-20, 150, -20));
 	camera->Set_rotation(Vector3(-30, -135, 0));
 	root.Attach_node(camera);
 
@@ -42,7 +46,7 @@ bool View3D::Init()
 	texture = new Bitmap;
 	texture->Create(512, 512);
 	texture->Set_target();
-	al_clear_to_color(al_map_rgba_f(1, 0, 0, 0));
+	al_clear_to_color(al_map_rgb_f(1, 1, 1));
 	al_set_target_backbuffer(al_get_current_display());
 
 	splat_texture = new Bitmap;

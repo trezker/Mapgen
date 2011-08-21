@@ -16,26 +16,6 @@
 int main() {
 	MTRand_int32 seedrand;
 
-	Map map;
-	map.Set_size(256, 256);
-	Diamond_square diamond_square;
-	diamond_square.Generate(map, 1337, 1.6);
-
-	Coloursystem coloursystem;
-	Colourpoint colourpoint;
-	colourpoint.Set_position(0);
-	colourpoint.Set_colour_f(1, 0, 0);
-	coloursystem.Add_colourpoint(colourpoint);
-	colourpoint.Set_position(1);
-	colourpoint.Set_colour_f(0, 1, 0);
-	coloursystem.Add_colourpoint(colourpoint);
-
-	for(int x = 0; x<map.Get_width(); ++x) {
-		for(int y = 0; y<map.Get_height(); ++y) {
-			map.Get_point(x, y).elevation *= map.Get_width()/2;
-		}
-	}
-
 	al_init();
 	al_install_mouse();
 	al_install_keyboard();
@@ -63,7 +43,19 @@ int main() {
 	if(!view3d.Init())
 		return 0;
 
-	view3d.Build_map(map);
+	Coloursystem coloursystem;
+	Colourpoint colourpoint;
+	colourpoint.Set_position(0);
+	colourpoint.Set_colour_f(1, 0, 0);
+	coloursystem.Add_colourpoint(colourpoint);
+	colourpoint.Set_position(1);
+	colourpoint.Set_colour_f(0, 1, 0);
+	coloursystem.Add_colourpoint(colourpoint);
+
+	Map map;
+	map.Set_size(256, 256);
+
+	Diamond_square diamond_square;
 
 	double last_time = al_current_time();
 
@@ -82,6 +74,28 @@ int main() {
 				if(ALLEGRO_KEY_N == event.keyboard.keycode)
 				{
 					diamond_square.Generate(map, seedrand(), 1.6);
+					map.Normalize();
+					
+					shared_ptr<Bitmap> texture = view3d.Get_texture();
+					texture->Create(map.Get_width(), map.Get_height());
+					texture->Set_target();
+					al_clear_to_color(al_map_rgba_f(1, 1, 0, 1));
+					for(int x = 0; x<map.Get_width(); ++x) {
+						for(int y = 0; y<map.Get_height(); ++y) {
+				//			std::cout<<map.Get_point(x, y).elevation<<std::endl;
+							Colourpoint colourpoint = coloursystem.Interpolate(map.Get_point(x, y).elevation);
+							ALLEGRO_COLOR color = al_map_rgb_f(colourpoint.Get_r(), colourpoint.Get_g(), colourpoint.Get_b());
+							al_draw_pixel(x+0.5f, map.Get_height()-y-0.5f, color);
+						}
+					}
+					al_set_target_backbuffer(al_get_current_display());
+
+					for(int x = 0; x<map.Get_width(); ++x) {
+						for(int y = 0; y<map.Get_height(); ++y) {
+							map.Get_point(x, y).elevation *= map.Get_width()/2;
+						}
+					}
+
 					view3d.Build_map(map);
 				}
 			}

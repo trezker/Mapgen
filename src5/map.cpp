@@ -45,3 +45,24 @@ const Map_point& Map::Get_point(int x, int y) const
 	while(y>=Get_height()) y -= Get_height();
 	return map_field[x][y];
 }
+
+void Map::Normalize()
+{
+	float min = map_field[0][0].elevation;
+	float max = map_field[0][0].elevation;
+	for(int x=0; x<Get_width(); ++x) {
+		for(int y=0; y<Get_width(); ++y) {
+			if(map_field[x][y].elevation<min){
+				min = map_field[x][y].elevation;
+			}
+			if(map_field[x][y].elevation>max){
+				max = map_field[x][y].elevation;
+			}
+		}
+	}
+	for(int x=0; x<Get_width(); ++x) {
+		for(int y=0; y<Get_width(); ++y) {
+			map_field[x][y].elevation = (map_field[x][y].elevation - min)/(max - min);
+		}
+	}
+}

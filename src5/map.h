@@ -15,6 +15,7 @@ public:
 	int Get_height() const;
 	Map_point& Get_point(int x, int y);
 	const Map_point& Get_point(int x, int y) const;
+	void Normalize();
 private:
 	typedef std::vector< Map_point > Map_strip;
 	typedef std::vector< Map_strip > Map_field;
