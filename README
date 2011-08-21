@@ -1,10 +1,24 @@
 Note: 
 The docs folder is old, this whole project hasn't been touched in years until it went up on github.
-But read it anyway, it has relevant information.
+But read it anyway, it has some relevant information.
+
+== New version WIP ==
+I have started rebuilding the generator from scratch.
+I'm using C++ and Allegro 5 and render the map directly to 3D with OpenGL.
+I'm using mtrand instead of the crappy standard rand() because people were complaining in IRC.
 
 === Building ===
 There's now a premake4 build script.
-This builds using Allegro 4.4.
+
+==== Old mapgen ====
+The old mapgen builds using Allegro 4.4.
+The project is commented out in the script, uncomment it to build.
+The exe is build/mapgen
+
+==== New Mapgen ====
+This depends on a 3D library I made called Alledge. https://github.com/trezker/alledge
+No GUI yet, but when I add it I'll probably use SWAG. https://github.com/trezker/SWAG
+Exe is build/mapgen5
 
 === 3D view ===
 Uses Allegros old software 3D routines. It doesn't matter how good your gfx hardware is.
