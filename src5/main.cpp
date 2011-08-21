@@ -30,6 +30,12 @@ int main() {
 	colourpoint.Set_colour_f(0, 1, 0);
 	coloursystem.Add_colourpoint(colourpoint);
 
+	for(int x = 0; x<map.Get_width(); ++x) {
+		for(int y = 0; y<map.Get_height(); ++y) {
+			map.Get_point(x, y).elevation *= map.Get_width()/2;
+		}
+	}
+
 	al_init();
 	al_install_mouse();
 	al_install_keyboard();

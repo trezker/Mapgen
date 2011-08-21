@@ -49,11 +49,6 @@ void Diamond_square::Generate(Map& map, int seed, float fractalfactor)
 			map.Get_point(x, y).elevation = average;
 		}
 	}
-	for(int x = 0; x<map.Get_width(); ++x) {
-		for(int y = 0; y<map.Get_height(); ++y) {
-			map.Get_point(x, y).elevation *= map.Get_width()/2;
-		}
-	}
 }
 
 void Diamond_square::Calc_midpoint(float amount, Map& map, Map_point* p[4], int i, int j, int k)
