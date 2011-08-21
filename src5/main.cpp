@@ -138,13 +138,7 @@ int main() {
 					}
 					al_set_target_backbuffer(al_get_current_display());
 
-					for(int x = 0; x<map.Get_width(); ++x) {
-						for(int y = 0; y<map.Get_height(); ++y) {
-							map.Get_point(x, y).elevation *= map.Get_width()/4;
-						}
-					}
-
-					view3d.Build_map(map);
+					view3d.Build_map(map, map.Get_width()/4);
 				}
 			}
 			if (ALLEGRO_EVENT_DISPLAY_CLOSE == event.type)

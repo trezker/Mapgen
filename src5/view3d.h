@@ -16,7 +16,7 @@ class View3D {
 public:
 	bool Init();
 	
-	void Build_map(const Map& map);
+	void Build_map(const Map& map, float height_scale);
 	shared_ptr<Bitmap> Get_texture();
 	
 	void Update(float dt);
