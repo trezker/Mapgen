@@ -6,6 +6,7 @@
 class Colourpoint {
 public:
 	Colourpoint();
+	Colourpoint(int r, int g, int b, float p);
 	void Set_position(float p);
 	void Set_colour(int r, int g, int b);
 	void Set_colour_f(float r, float g, float b);

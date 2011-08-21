@@ -44,14 +44,63 @@ int main() {
 		return 0;
 
 	Coloursystem coloursystem;
-	Colourpoint colourpoint;
-	colourpoint.Set_position(0);
-	colourpoint.Set_colour_f(1, 0, 0);
-	coloursystem.Add_colourpoint(colourpoint);
-	colourpoint.Set_position(1);
-	colourpoint.Set_colour_f(0, 1, 0);
-	coloursystem.Add_colourpoint(colourpoint);
+/*
+	coloursystem.Add_colourpoint(Colourpoint(255, 0, 0, 0));
+	coloursystem.Add_colourpoint(Colourpoint(0, 255, 0, 1));
+*/
+/*	Blue/green
+	coloursystem.Add_colourpoint(Colourpoint(0, 0, 255, 0));
+	coloursystem.Add_colourpoint(Colourpoint(0, 240, 0, 1));
+	coloursystem.Add_colourpoint(Colourpoint(0, 0, 255, 0.49));
+	coloursystem.Add_colourpoint(Colourpoint(0, 240, 0, 0.51));
+*/
+/*	//Land only
+	coloursystem.Add_colourpoint(Colourpoint(0, 220, 0, 0));
+	coloursystem.Add_colourpoint(Colourpoint(255, 255, 255, 1));
+	coloursystem.Add_colourpoint(Colourpoint(10, 120, 5, 0.1));
+	coloursystem.Add_colourpoint(Colourpoint(192, 140, 70, 0.3));
+	coloursystem.Add_colourpoint(Colourpoint(160, 80, 10, 0.5));
+	coloursystem.Add_colourpoint(Colourpoint(50, 40, 30, 0.65));
+	coloursystem.Add_colourpoint(Colourpoint(99, 99, 99, 0.8));
+	coloursystem.Add_colourpoint(Colourpoint(255, 255, 244, 0.9));
+*/
+//	Grey
+/*
+	coloursystem.Add_colourpoint(Colourpoint(0, 0, 0, 0));
+	coloursystem.Add_colourpoint(Colourpoint(255, 255, 255, 1));
+	coloursystem.Add_colourpoint(Colourpoint(20, 20, 20, 0.45));
+	coloursystem.Add_colourpoint(Colourpoint(190, 190, 190, 0.5));
+	coloursystem.Add_colourpoint(Colourpoint(190, 190, 190, 0.55));
+	coloursystem.Add_colourpoint(Colourpoint(100, 100, 100, 0.551));
+	coloursystem.Add_colourpoint(Colourpoint(30, 30, 30, 0.75));
+	coloursystem.Add_colourpoint(Colourpoint(60, 60, 60, 0.9));
+	coloursystem.Add_colourpoint(Colourpoint(255, 255, 255, 0.95));
+*/
+// Natural
+	coloursystem.Add_colourpoint(Colourpoint(0, 0, 200, 0));
+	coloursystem.Add_colourpoint(Colourpoint(255, 255, 255, 1));
+	coloursystem.Add_colourpoint(Colourpoint(0, 0, 255, 0.45));
+	coloursystem.Add_colourpoint(Colourpoint(0, 255, 255, 0.5));
+	coloursystem.Add_colourpoint(Colourpoint(255, 159, 31, 0.51));
+	coloursystem.Add_colourpoint(Colourpoint(255, 159, 31, 0.55));
+	coloursystem.Add_colourpoint(Colourpoint(19, 179, 11, 0.555));
+	coloursystem.Add_colourpoint(Colourpoint(0, 119, 0, 0.6));
+	coloursystem.Add_colourpoint(Colourpoint(219, 186, 140, 0.7));
+	coloursystem.Add_colourpoint(Colourpoint(125, 77, 0, 0.85));
+	coloursystem.Add_colourpoint(Colourpoint(250, 250, 250, 0.9));
 
+/*
+	ColourSystem pal4(0, 0, 200, 255, 255, 255);
+	pal4.AddPoint(0, 0, 255, 0.45);
+	pal4.AddPoint(0, 255, 255, 0.5);
+	pal4.AddPoint(255, 159, 31, 0.51);
+	pal4.AddPoint(255, 159, 31, 0.55);
+	pal4.AddPoint(19, 179, 11, 0.555);
+	pal4.AddPoint(0, 119, 0, 0.6);
+	pal4.AddPoint(219, 186, 140, 0.7);
+	pal4.AddPoint(125, 77, 0, 0.85);
+	pal4.AddPoint(250, 250, 250, 0.9);
+*/
 	Map map;
 	map.Set_size(256, 256);
 

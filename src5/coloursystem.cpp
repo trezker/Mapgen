@@ -9,6 +9,14 @@ Colourpoint::Colourpoint()
 {
 }
 
+Colourpoint::Colourpoint(int ir, int ig, int ib, float ip)
+:p(ip)
+,r(ir/256.f)
+,g(ig/256.f)
+,b(ib/256.f)
+{
+}
+
 void Colourpoint::Set_position(float ip)
 {
 	p = ip;
