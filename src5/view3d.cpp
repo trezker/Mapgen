@@ -65,7 +65,7 @@ bool View3D::Init()
 	return true;
 }
 
-void View3D::Build_map(const Map& map, float height_scale)
+void View3D::Build_map(const Map& map, float height_scale, float sealevel)
 {
 	int width = map.Get_width();
 	int height = map.Get_height();
@@ -74,7 +74,8 @@ void View3D::Build_map(const Map& map, float height_scale)
 	heightmap->Resize(width, height);
 	for(int x = 0; x<width; ++x){
 		for(int y = 0; y<height; ++y){
-			heightmap->Set_height(x, y, map.Get_point(x, y).Get_elevation() * height_scale);
+			float h = map.Get_point(x, y).Get_elevation();
+			heightmap->Set_height(x, y, h>sealevel? h * height_scale : sealevel*height_scale);
 		}
 	}
 	heightmap->Recalc_normals();

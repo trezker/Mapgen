@@ -138,7 +138,7 @@ int main() {
 					}
 					al_set_target_backbuffer(al_get_current_display());
 
-					view3d.Build_map(map, map.Get_width()/4);
+					view3d.Build_map(map, map.Get_width()/4, 0.51);
 				}
 			}
 			if (ALLEGRO_EVENT_DISPLAY_CLOSE == event.type)
