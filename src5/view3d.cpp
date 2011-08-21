@@ -1,0 +1,243 @@
+#include "view3d.h"
+#include "map.h"
+#include <allegro5/allegro_opengl.h>
+#include <iostream>
+
+
+bool View3D::Init()
+{
+	fov = 45.f;
+	near = 1.f;
+	far = 1000.f;
+	width = 640;
+	height = 480;
+
+	move_forward = false;
+	move_backward = false;
+	move_left = false;
+	move_right = false;
+	move_up = false;
+	move_down = false;
+	lmb = false;
+	rmb = false;
+	mouse_x = 0;
+	mouse_y = 0;
+
+	camera = new Cameranode();
+	camera->Set_position(Vector3(-20, 30, -20));
+	camera->Set_rotation(Vector3(-30, -135, 0));
+	root.Attach_node(camera);
+
+	light = new Lightnode;
+	light->Set_ambient(0.5, 0.5, 0.5, 1);
+	light->Set_diffuse(0.8, 0.8, 0.8, 1);
+	light->Set_specular(0.4, 0.4, 0.4, 1);
+//	light->Set_position(Vector3(1, 1, 1), 0);
+	light->Set_position(Vector3(100, 100, 100), 1);
+	camera->Attach_node(light);
+	
+	transform = new Transformnode;
+	light->Attach_node(transform);
+
+	texture = new Bitmap;
+	texture->Create(512, 512);
+	texture->Set_target();
+	al_clear_to_color(al_map_rgba_f(1, 0, 0, 0));
+	al_set_target_backbuffer(al_get_current_display());
+
+	splat_texture = new Bitmap;
+	splat_texture->Create(512, 512);
+	splat_texture->Set_target();
+	al_clear_to_color(al_map_rgba_f(1, 0, 0, 0));
+	al_set_target_backbuffer(al_get_current_display());
+
+	heightmap = new Heightmap;
+	heightmap->Set_tilesize(1);
+	heightmap->Resize(4, 4);
+	heightmap->Set_texture(texture, 0);
+	heightmap->Set_texture(texture, 1);
+	heightmap->Set_splat_texture(splat_texture);
+	transform->Attach_node(heightmap);
+	return true;
+}
+
+void View3D::Build_map(const Map& map)
+{
+//	transform->Detach_all_nodes();
+	int width = map.Get_width();
+	int height = map.Get_height();
+	float cw = -width;///2.0;
+	float ch = -height;///2.0;
+	heightmap->Resize(width, height);
+	for(int x = 0; x<width; ++x){
+		for(int y = 0; y<height; ++y){
+			heightmap->Set_height(x, y, map.Get_point(x, y).Get_elevation());
+/*			
+			const Map_point& p00 = map.Get_point(x, y);
+			const Map_point& p01 = map.Get_point(x, y+1);
+			const Map_point& p10 = map.Get_point(x+1, y);
+			const Map_point& p11 = map.Get_point(x+1, y+1);
+			Vector3 corners[4];
+			corners[0] = Vector3(cw+x+1, p11.Get_elevation(), ch+y+1);
+			corners[1] = Vector3(cw+x, p01.Get_elevation(), ch+y+1);
+			corners[2] = Vector3(cw+x, p00.Get_elevation(), ch+y);
+			corners[3] = Vector3(cw+x+1, p10.Get_elevation(), ch+y);
+			
+			shared_ptr<Quadnode> tile = new Quadnode;
+			tile->Set_corners(corners);
+			transform->Attach_node(tile);
+			heightmap->Set_height(x, y, 2);
+*/		}
+	}
+	heightmap->Recalc_normals();
+}
+
+void View3D::Update(float dt)
+{
+/*	Vector3 rot = transform->Get_rotation();
+	rot.y += 30*dt;
+	transform->Set_rotation(rot);
+*/
+	camera_velocity = 50;
+	if(move_forward)
+	{
+		camera->Set_position(camera->Get_position() + camera->Get_front() * dt*camera_velocity);
+	}
+	if(move_backward)
+	{
+		camera->Set_position(camera->Get_position() - camera->Get_front() * dt*camera_velocity);
+	}
+	if(move_left)
+	{
+		camera->Set_position(camera->Get_position() - camera->Get_right() * dt*camera_velocity);
+	}
+	if(move_right)
+	{
+		camera->Set_position(camera->Get_position() + camera->Get_right() * dt*camera_velocity);
+	}
+	if(move_up)
+	{
+		camera->Set_position(camera->Get_position() + camera->Get_up() * dt*camera_velocity);
+	}
+	if(move_down)
+	{
+		camera->Set_position(camera->Get_position() - camera->Get_up() * dt*camera_velocity);
+	}
+
+	if(rmb)
+	{
+		Init_perspective_view(fov, width/height, near, far);
+		Vector3 oglpoint = Unproject(mouse_x, mouse_y, camera);
+		Pop_view();
+
+//		std::cout<<"oglpoint x, y, z: "<<oglpoint.x<<", "<<oglpoint.y<<", "<<oglpoint.z<<std::endl;
+		float curve[5] = {-1, -.7, 0, .3, 0};
+		heightmap->Apply_brush(oglpoint.x, oglpoint.z, 10, 1*dt, curve, 5);
+	}
+}
+
+void View3D::Render()
+{
+	Init_perspective_view(fov, width/height, near, far);
+
+	glEnable(GL_DEPTH_TEST);
+ 	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_LIGHTING);
+
+	root.Apply();
+
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+
+	Pop_view();
+}
+
+
+void View3D::Event(ALLEGRO_EVENT event)
+{
+	if (ALLEGRO_EVENT_KEY_DOWN == event.type)
+	{
+		if (ALLEGRO_KEY_W == event.keyboard.keycode)
+		{
+			move_forward = true;
+		}
+		if (ALLEGRO_KEY_S == event.keyboard.keycode)
+		{
+			move_backward = true;
+		}
+		if (ALLEGRO_KEY_A == event.keyboard.keycode)
+		{
+			move_left = true;
+		}
+		if (ALLEGRO_KEY_D == event.keyboard.keycode)
+		{
+			move_right = true;
+		}
+		if (ALLEGRO_KEY_R == event.keyboard.keycode)
+		{
+			move_up = true;
+		}
+		if (ALLEGRO_KEY_F == event.keyboard.keycode)
+		{
+			move_down = true;
+		}
+	}
+	if (ALLEGRO_EVENT_KEY_UP == event.type)
+	{
+		if (ALLEGRO_KEY_W == event.keyboard.keycode)
+		{
+			move_forward = false;
+		}
+		if (ALLEGRO_KEY_S == event.keyboard.keycode)
+		{
+			move_backward = false;
+		}
+		if (ALLEGRO_KEY_A == event.keyboard.keycode)
+		{
+			move_left = false;
+		}
+		if (ALLEGRO_KEY_D == event.keyboard.keycode)
+		{
+			move_right = false;
+		}
+		if (ALLEGRO_KEY_R == event.keyboard.keycode)
+		{
+			move_up = false;
+		}
+		if (ALLEGRO_KEY_F == event.keyboard.keycode)
+		{
+			move_down = false;
+		}
+	}
+	if (ALLEGRO_EVENT_MOUSE_BUTTON_DOWN == event.type)
+	{
+		if(event.mouse.button == 1)
+		{
+			lmb = true;
+		}
+		if(event.mouse.button == 2)
+		{
+			rmb = true;
+		}
+	}
+	if (ALLEGRO_EVENT_MOUSE_BUTTON_UP == event.type)
+	{
+		if(event.mouse.button == 1)
+		{
+			lmb = false;
+		}
+		if(event.mouse.button == 2)
+		{
+			rmb = false;
+		}
+	}
+	if (ALLEGRO_EVENT_MOUSE_AXES == event.type)
+	{
+		if(lmb)
+		{
+			camera->Set_rotation(camera->Get_rotation() + Vector3(-event.mouse.dy, -event.mouse.dx, 0));
+		}
+		mouse_x = event.mouse.x;
+		mouse_y = event.mouse.y;
+	}
+}
