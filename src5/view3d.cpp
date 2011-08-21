@@ -29,7 +29,7 @@ bool View3D::Init()
 	root.Attach_node(camera);
 
 	light = new Lightnode;
-	light->Set_ambient(0.5, 0.5, 0.5, 1);
+	light->Set_ambient(0.2, 0.2, 0.2, 1);
 	light->Set_diffuse(0.8, 0.8, 0.8, 1);
 	light->Set_specular(0.4, 0.4, 0.4, 1);
 //	light->Set_position(Vector3(1, 1, 1), 0);
@@ -63,7 +63,6 @@ bool View3D::Init()
 
 void View3D::Build_map(const Map& map)
 {
-//	transform->Detach_all_nodes();
 	int width = map.Get_width();
 	int height = map.Get_height();
 	float cw = -width;///2.0;
@@ -72,32 +71,13 @@ void View3D::Build_map(const Map& map)
 	for(int x = 0; x<width; ++x){
 		for(int y = 0; y<height; ++y){
 			heightmap->Set_height(x, y, map.Get_point(x, y).Get_elevation());
-/*			
-			const Map_point& p00 = map.Get_point(x, y);
-			const Map_point& p01 = map.Get_point(x, y+1);
-			const Map_point& p10 = map.Get_point(x+1, y);
-			const Map_point& p11 = map.Get_point(x+1, y+1);
-			Vector3 corners[4];
-			corners[0] = Vector3(cw+x+1, p11.Get_elevation(), ch+y+1);
-			corners[1] = Vector3(cw+x, p01.Get_elevation(), ch+y+1);
-			corners[2] = Vector3(cw+x, p00.Get_elevation(), ch+y);
-			corners[3] = Vector3(cw+x+1, p10.Get_elevation(), ch+y);
-			
-			shared_ptr<Quadnode> tile = new Quadnode;
-			tile->Set_corners(corners);
-			transform->Attach_node(tile);
-			heightmap->Set_height(x, y, 2);
-*/		}
+		}
 	}
 	heightmap->Recalc_normals();
 }
 
 void View3D::Update(float dt)
 {
-/*	Vector3 rot = transform->Get_rotation();
-	rot.y += 30*dt;
-	transform->Set_rotation(rot);
-*/
 	camera_velocity = 50;
 	if(move_forward)
 	{
